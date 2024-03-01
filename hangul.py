@@ -14,16 +14,17 @@ class HanSyllable:
         self.__jungseong = offset // 28 % 21
         self.__choseong = offset // 28 // 21
 
+    def __str__(self):
+        return chr(self.SYLLABLE_ENTRY + self.__choseong*28*21 + self.__jungseong*28 + self.__jongseong + 1)
+
     def printJamo(self):
         print(chr(self.__choseong + self.CHOSEONG_ENTRY), end='')
         print(chr(self.__jungseong + self.JUNGSEONG_ENTRY), end='')
         if self.__jongseong != -1:
             print(chr(self.__jongseong + self.JONGSEONG_ENTRY), end='')
 
-    def printSyllable(self):
-        print(chr(self.SYLLABLE_ENTRY + self.__choseong*28*21 + self.__jungseong*28 + self.__jongseong + 1), end='')
-    
-    def isHangul(self, word):
+    @staticmethod
+    def isHangul(word):
         code = ord(word)
 
         if code>=0xAC00 and code<=0xD7AF:
@@ -32,13 +33,13 @@ class HanSyllable:
             return False
 
     def changeChoseong(self, offset):
-        if not (offset >= 0 and offset <= 19):
+        if not (offset >= 0 and offset <= 18):
             raise Exception("잘못된 오프셋")
 
         self.__choseong = offset
 
     def changeJungseong(self, offset):
-        if not (offset >= 0 and offset <= 21):
+        if not (offset >= 0 and offset <= 20):
             raise Exception("잘못된 오프셋")
 
         self.__jungseong = offset
@@ -48,3 +49,11 @@ class HanSyllable:
             raise Exception("잘못된 오프셋")
 
         self.__jongseong = offset
+
+    def getOffsets(self):
+        return [self.__choseong, self.__jungseong, self.__jongseong]
+
+    def setOffsets(self, offsets):
+        self.changeChoseong(offsets[0])
+        self.changeJungseong(offsets[1])
+        self.changeJongseong(offsets[2])
